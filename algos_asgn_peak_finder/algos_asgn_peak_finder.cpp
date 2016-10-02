@@ -1,4 +1,6 @@
 // algos_asgn_peak_finder.cpp : Defines the entry point for the console application.
+//Author: Shreyas Subramanya Bhat
+//Student ID: 800958406
 //
 
 #include "stdafx.h"
@@ -10,12 +12,12 @@
 #include "vector"
 #include "deque"
 
+
 using namespace std;
 
-//int** fileToArray(string inFileName);
-int fileToArray(string inFileName);
-
-//int inArray[1000][1000];
+int** fileToArray(string inFileName, int* rowCount, int* colCount);
+//int fileToArray(string inFileName);
+//int rowCount, colCount;
 
 int main() 
 {
@@ -32,33 +34,41 @@ int main()
 	ifstream inFile;
 	ofstream outFile;
 	cout << endl;	
+	int rowCount = 0, colCountNew = 0;
+	int** inArray = fileToArray(pathNFileName, &rowCount, &colCountNew);
+	//fileToArray(pathNFileName);
 
-	//int** inArray = fileToArray(pathNFileName);
-	fileToArray(pathNFileName);
-
-	//findRowsColumns(pathNFileName);
+	//displaying the array we just imported
+	for (int i = 0; i < rowCount; i++)
+	{
+		for (int k = 0; k < colCountNew; k++)
+		{
+			cout << inArray[i][k] << " ";
+		}
+		cout << endl;
+	}
 
     return 0;
 }
 
 
 //int** fileToArray(string inFileName)
-int fileToArray(string inFileName)
+int** fileToArray(string inFileName, int* rowCount, int* colCountNew)
 {
 	ifstream inFile;
-	int row = 1000, col = 1000;
-	int** my2DArray = new int*[row];
 
 	// Finding row and column counts
 	inFile.open(inFileName, ios_base::in);
+
 	if (inFile.is_open())
 	{
-		//cout << "success!" << endl;
+		
 		string eachLine;
 		vector <int> getElements; //this vector size will give the column size
 		
 		string tempString, restLine, eachRow;
-		int rowCount = 0, colCount = 0;
+		*rowCount = 0;
+		int colCount = 0;
 		//int temp;
 		size_t pos1, pos2, pos3, pos4;
 
@@ -83,11 +93,8 @@ int fileToArray(string inFileName)
 				
 				eachRow = restLine.substr(pos3, pos4);
 				cout << "Fetching next row of the input Array: " << eachRow << endl;
-				//cout << "end of string is: ";
-				//cout << restLine.back() << endl;
 
 				// extracting each element of the row
-
 				stringstream lineStream(eachRow);
 				string value;
 				cout << "storing each value: " << endl;
@@ -97,7 +104,7 @@ int fileToArray(string inFileName)
 					cout << stoi(value) << endl;
 					++colCount;								//increment column count for the array
 				}
-				++rowCount;									//increment row count for the array
+				++(*rowCount);									//increment row count for the array
 
 				if (restLine.length() - pos4 > 4)
 					restLine = restLine.substr(pos4 + 5);	// shortening the original data extraction
@@ -109,16 +116,36 @@ int fileToArray(string inFileName)
 			}
 		}
 		cout << endl;
-		cout << "Row count: " << rowCount << endl;
-		cout << "Column count: " << colCount / rowCount << endl;
+		cout << "Row count: " << *rowCount << endl;
+		*colCountNew = colCount / *rowCount;
+		cout << "Column count: " << *colCountNew << endl;
 		inFile.close();
 
+		
+		//initializing array
+		int** my2dArray = new int* [*rowCount];
+		for (int i = 0; i < *rowCount; ++i)
+		{
+			my2dArray[i] = new int[*colCountNew];
+		}
 
+		//Reading vector and storing values in a 2D Array.
+		auto iElementLocator = getElements.begin();
+		while (iElementLocator != getElements.end())
+		{
+			for (int j = 0; j < *rowCount; j++)
+			{
+				for (int k = 0; k < *colCountNew; k++)
+				{
+					my2dArray[j][k] = *iElementLocator;
+					iElementLocator++;
+				}
+			}			
+		}		
+		return my2dArray;
 	}
 	else
 	{
 		cout << "fail :( " << endl;
 	}
-	//return my2DArray;
-	return 0;
 }
