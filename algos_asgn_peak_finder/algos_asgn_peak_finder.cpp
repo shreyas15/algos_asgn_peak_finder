@@ -12,7 +12,8 @@
 
 using namespace std;
 
-int** fileToArray(string inFileName);
+//int** fileToArray(string inFileName);
+int fileToArray(string inFileName);
 
 //int inArray[1000][1000];
 
@@ -32,7 +33,8 @@ int main()
 	ofstream outFile;
 	cout << endl;	
 
-	int** inArray = fileToArray(pathNFileName);
+	//int** inArray = fileToArray(pathNFileName);
+	fileToArray(pathNFileName);
 
 	//findRowsColumns(pathNFileName);
 
@@ -40,7 +42,8 @@ int main()
 }
 
 
-int** fileToArray(string inFileName)
+//int** fileToArray(string inFileName)
+int fileToArray(string inFileName)
 {
 	ifstream inFile;
 	int row = 1000, col = 1000;
@@ -53,53 +56,39 @@ int** fileToArray(string inFileName)
 		//cout << "success!" << endl;
 		string eachLine;
 		vector <int> getRow; //this vector size will give the column size
-		vector <int> getCol; //this vector size will give the row size
-		string tempString;
+		//vector <int> getCol; //this vector size will give the row size
+		string tempString, restLine;
 		char tempChar;
 		bool rowStart = false;
+		int rowCount = 1;
+		size_t pos1, pos2, pos3;
 
 		while (inFile.good())
 		{
-			while (getline(inFile, tempString))
+			getline(inFile, tempString);
+			pos1 = tempString.find("[[");
+			cout << pos1 << endl;
+			restLine = tempString.substr(pos1);
+			cout << restLine << endl;
+			/*
+			if (restLine.find("["))
 			{
-				istringstream ss(tempString);
-				while( ss >> tempChar)
+				rowStart = true;
+				while (!restLine.find("], "))
 				{
-					if (((tempChar - '0') == 43)) //this means we found a '['
-					{
-						continue;
-					}
-					else if ((tempChar - '0') == 45) //this means we found a ']'
-					{
-						rowStart = false;
-					}
-					else if ((tempChar - '0') == -4) //this means we found a ','
-					{
-						continue;
-					}
-					else if ((tempChar - '0') == -16) //this means we found a SPACE
-					{
-						continue;
-					}
-					else
-					{
-						rowStart = true;
-						getRow.push_back(tempChar - '0');
-					}
 
-					/*cout << "This symbol as is " << tempChar << endl;
-					cout << "This symbol in decimal is " << tempChar - '0' << endl;
-					cout << endl; */
 				}
-			}
+				pos2 = tempString.find("], ");
+				rowStart = false;
+			} */
 			
 		}
-
 		inFile.close();
 	}
 	else
 	{
 		cout << "fail :( " << endl;
 	}
-	return my2DArray;
+	//return my2DArray;
+	return 0;
 }
