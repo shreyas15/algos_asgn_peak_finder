@@ -15,9 +15,7 @@
 
 using namespace std;
 
-int** fileToArray(string inFileName, int* rowCount, int* colCount);
-//int fileToArray(string inFileName);
-//int rowCount, colCount;
+int** fileToArray(string inFileName, int* rowCount, int* colCount); // function to convert the input FILE to a 2D array and return to main for further computation.
 
 int main() 
 {
@@ -36,9 +34,8 @@ int main()
 	cout << endl;	
 	int rowCount = 0, colCountNew = 0;
 	int** inArray = fileToArray(pathNFileName, &rowCount, &colCountNew);
-	//fileToArray(pathNFileName);
 
-	//displaying the array we just imported
+	/*****    To displaying the array we just imported
 	for (int i = 0; i < rowCount; i++)
 	{
 		for (int k = 0; k < colCountNew; k++)
@@ -46,7 +43,7 @@ int main()
 			cout << inArray[i][k] << " ";
 		}
 		cout << endl;
-	}
+	} */
 
     return 0;
 }
