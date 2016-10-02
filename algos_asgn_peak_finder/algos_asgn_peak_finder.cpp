@@ -57,11 +57,11 @@ int fileToArray(string inFileName)
 		string eachLine;
 		vector <int> getRow; //this vector size will give the column size
 		//vector <int> getCol; //this vector size will give the row size
-		string tempString, restLine;
+		string tempString, restLine, eachRow;
 		char tempChar;
 		bool rowStart = false;
 		int rowCount = 1;
-		size_t pos1, pos2, pos3;
+		size_t pos1, pos2, pos3, pos4;
 
 		while (inFile.good())
 		{
@@ -70,17 +70,14 @@ int fileToArray(string inFileName)
 			cout << pos1 << endl;
 			restLine = tempString.substr(pos1);
 			cout << restLine << endl;
-			/*
-			if (restLine.find("["))
-			{
-				rowStart = true;
-				while (!restLine.find("], "))
-				{
+			cout << endl;
 
-				}
-				pos2 = tempString.find("], ");
-				rowStart = false;
-			} */
+			pos2 = restLine.find("[");
+			pos3 = pos2 + 1;
+			pos4 = restLine.find("]");
+			//cout << pos2 << endl;
+			eachRow = restLine.substr(pos3,pos4);
+			cout << eachRow << endl;
 			
 		}
 		inFile.close();
