@@ -55,31 +55,53 @@ int fileToArray(string inFileName)
 	{
 		//cout << "success!" << endl;
 		string eachLine;
-		vector <int> getRow; //this vector size will give the column size
+		vector <int> getElements; //this vector size will give the column size
 		//vector <int> getCol; //this vector size will give the row size
 		string tempString, restLine, eachRow;
 		char tempChar;
 		bool rowStart = false;
-		int rowCount = 1;
+		int rowCount = 0, colCount = 0;
+		//int temp;
 		size_t pos1, pos2, pos3, pos4;
 
 		while (inFile.good())
 		{
+			// getting rid of unwanted text in file 
 			getline(inFile, tempString);
 			pos1 = tempString.find("[[");
 			cout << pos1 << endl;
 			restLine = tempString.substr(pos1);
-			cout << restLine << endl;
+			cout << "The input Matrix from file is:" << endl << endl;
+			cout << restLine << endl;				//restLine stores just the array part
 			cout << endl;
 
+			//extracting each row
 			pos2 = restLine.find("[");
-			pos3 = pos2 + 1;
-			pos4 = restLine.find("]");
-			//cout << pos2 << endl;
-			eachRow = restLine.substr(pos3,pos4);
+			pos3 = pos2 + 2;
+			pos4 = restLine.find("]") - 2;
+			//***************************cout << pos2 << endl;
+			eachRow = restLine.substr(pos3, pos4);
 			cout << eachRow << endl;
+			cout << "end of string is: ";
+			cout << restLine.back() << endl;
+
+			// extracting each element of the row
 			
+			stringstream lineStream(eachRow);
+			string value;
+			while (getline(lineStream, value, ','))
+			{
+				getElements.push_back(stoi(value));
+				cout << stoi(value) << endl;
+				++colCount;							//increment column count for the array
+			}
+
+			restLine = restLine.substr(pos4 + 4);	// shortening the original data extraction
+			cout << restLine << endl << endl;
+			++rowCount;								//increment row count for the array
+			cout << endl;
 		}
+
 		inFile.close();
 	}
 	else
