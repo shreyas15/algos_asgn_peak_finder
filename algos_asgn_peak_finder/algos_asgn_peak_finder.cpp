@@ -60,7 +60,7 @@ int fileToArray(string inFileName)
 		string tempString, restLine, eachRow;
 		char tempChar;
 		bool rowStart = false;
-		int rowCount = 0, colCount = 0;
+		int rowCount = 0, colCount = 0, length = 0;
 		//int temp;
 		size_t pos1, pos2, pos3, pos4;
 
@@ -72,16 +72,25 @@ int fileToArray(string inFileName)
 			cout << pos1 << endl;
 			restLine = tempString.substr(pos1);
 			cout << "The input Matrix from file is:" << endl << endl;
-			cout << restLine << endl;				//restLine stores just the array part
+			cout << restLine << endl;					//restLine stores just the array part
 			cout << endl;
 
-			while (restLine.length() >= 3)								//iterate till the end of restLine to find all rows
+			//find string length of each row
+
+			pos2 = restLine.find("[");
+			pos3 = pos2 + 2;
+			pos4 = restLine.find("]") - 2;
+			eachRow = restLine.substr(pos3, pos4);
+			length = eachRow.length();
+			cout << length << endl;
+
+			while (restLine.find("[[[") != 0)				//iterate till the end of restLine to find all rows
 			{
 				//extracting each row
 				pos2 = restLine.find("[");
 				pos3 = pos2 + 2;
 				pos4 = restLine.find("]") - 2;
-				//***************************cout << pos2 << endl;
+				
 				eachRow = restLine.substr(pos3, pos4);
 				cout << eachRow << endl;
 				cout << "end of string is: ";
@@ -98,15 +107,19 @@ int fileToArray(string inFileName)
 					++colCount;							//increment column count for the array
 				}
 				++rowCount;								//increment row count for the array
-				restLine.insert(0, "[");
-				restLine = restLine.substr(pos4 + 5);	// shortening the original data extraction
-				
+				//int gapCheck = restLine.length() - pos4;
+				//if (gapCheck > length-5)
+				if (restLine.length() - pos4 > 4)
+					restLine = restLine.substr(pos4 + 5);	// shortening the original data extraction
+				//if (restLine[0] != '[')
+					restLine.insert(0, "[");
+
 				cout << restLine << endl << endl;
-				cout << restLine.length() << endl;
+				cout << "Row count: "<< rowCount << endl;
 				cout << endl;
 			}
 		}
-
+		cout << "Column count: " << colCount / rowCount << endl;
 		inFile.close();
 	}
 	else
