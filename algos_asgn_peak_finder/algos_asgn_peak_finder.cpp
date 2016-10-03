@@ -16,26 +16,32 @@
 using namespace std;
 
 int** fileToArray(string inFileName, int* rowCount, int* colCount); // function to convert the input FILE to a 2D array and return to main for further computation.
+int peakFinder(int** inPeakArray, string pathName, int rows, int columns);									// function to find peak of the matrix and output to a FILE.
 
 int main() 
 {
 	//intro
 	cout << "Welcome to Peak Finder!" << endl;
-	cout << "Enter the name of the file to be read for input and press ENTER" << endl;
 	cout << " **Note: The file and path cannot contain spaces**" << endl;
 	cout << endl;
 
 	string pathNFileName;
-	cin >> pathNFileName;
+	string pathName;
+	string fileName;
+	cout << "Enter the path of the input (without spaces and ending with '\') and press ENTER" << endl;
+	cin >> pathName;
+	cout << "Enter the filename with extension (without spaces) and press ENTER" << endl;
+	cin >> fileName;
+	pathNFileName = pathName + fileName;
 
-	//declaring input and output file streams
+	//declaring input file streams
 	ifstream inFile;
-	ofstream outFile;
+	
 	cout << endl;	
-	int rowCount = 0, colCountNew = 0;
+	int rowCount, colCountNew;
 	int** inArray = fileToArray(pathNFileName, &rowCount, &colCountNew);
 
-	/*****    To displaying the array we just imported
+	//   To displaying the array we just imported
 	for (int i = 0; i < rowCount; i++)
 	{
 		for (int k = 0; k < colCountNew; k++)
@@ -43,7 +49,9 @@ int main()
 			cout << inArray[i][k] << " ";
 		}
 		cout << endl;
-	} */
+	} //*****/
+	cout << endl;
+	peakFinder(inArray, pathName, rowCount, colCountNew);
 
     return 0;
 }
@@ -144,5 +152,49 @@ int** fileToArray(string inFileName, int* rowCount, int* colCountNew)
 	else
 	{
 		cout << "fail :( " << endl;
+	}
+}
+
+int peakFinder(int** inPeakArray, string pathName, int rows, int columns)
+{
+	ofstream outFile;
+	string outputFile = pathName + "output.txt";
+	outFile.open(outputFile, ios_base::out);
+
+	if (outFile.is_open())
+	{
+		int halfRows = rows / 2;		// to divide array into 4 quadrants 
+		int halfCols = columns / 2;		// to divide array into 4 quadrants
+		int temp1;
+		int N, S, W, E; // to store north, south, west and east neighbors of an element
+
+		for (int i = 1; i < columns-1; i++)
+		{
+			for (int j = 1; j < rows-1; j++)
+			{
+				N = inPeakArray[i - 1][j];
+				S = inPeakArray[i + 1][j];
+				W = inPeakArray[i][j-1];
+				E = inPeakArray[i][j+1];
+				if ((inPeakArray[i][j] >= N) && (inPeakArray[i][j] >= S) && (inPeakArray[i][j] >= W) && (inPeakArray[i][j] >= E))
+				{
+					outFile << "Peak at (" << i+1 << "," << j+1 << ") = " << inPeakArray[i][j] << "\n" << endl;
+				}
+				else
+				{
+					//outFile << "No peaks found. \n";
+					continue;
+				}			
+			}
+		}
+
+
+		outFile.close();
+		return 0;
+	}
+	else
+	{
+		cout << "Unable to save to the destination" << endl;
+		return 1;
 	}
 }
