@@ -16,6 +16,28 @@ algos_asgn_peak_finder.cpp
     This is the main application source file.
 
 
+Description of program design:
+------------------------------
+The program makes use of strings and string streams in C++ to read and store values into a full fledged 2D array. This array is dynamically allocated memory and is handled throughout by reference. Apart from the Main() function, I am making use of two other functions namely:
+1) int** fileToArray(string inFileName, int* rowCount, int* colCount) -> function to convert the input FILE to a 2D array and return to main for further computation.
+2) int peakFinder(int** inPeakArray, string pathName, int rows, int columns) -> function to find peak of the matrix and output to a FILE. 
+
+Algorithm implementation
+------------------------
+To find the peak, the 4 neighbors of an element are checked. The neighbors are those which are to the north, south, west and east of an element in the array. Peaks are not searched for in the boundary of the matrix. A column by column search is performed to find the local peaks. The steps are: 
+1) Iterate through columns
+2) (m-2) elements of that column are checked, because the boundary is excluded.
+3) for each element, the 4 neighbors are checked if lesser than the center element. If so, it's a peak. Go to step 4. Else go to step 5.
+4) write the value and associated indices of the value to output.txt
+5) continue through the loop until remaining columns are checked.
+
+Data structures and types used
+--------------------
+String class
+StringStream class
+Vectors (specialty of C++)
+Dynamic 2D array
+
 
 /////////////////////////////////////////////////////////////////////////////
 Other standard files:

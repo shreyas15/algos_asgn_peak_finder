@@ -10,7 +10,7 @@
 #include "string"
 #include "sstream"
 #include "vector"
-#include "deque"
+#include "time.h"
 
 
 using namespace std;
@@ -20,6 +20,7 @@ int peakFinder(int** inPeakArray, string pathName, int rows, int columns);						
 
 int main() 
 {
+	
 	//intro
 	cout << "Welcome to Peak Finder!" << endl;
 	cout << " **Note: The file and path cannot contain spaces**" << endl;
@@ -28,10 +29,11 @@ int main()
 	string pathNFileName;
 	string pathName;
 	string fileName;
-	cout << "Enter the path of the input (without spaces and ending with '\') and press ENTER" << endl;
+	cout << "Enter the path of the input as is (without spaces and ending with '\') and press ENTER" << endl;
 	cin >> pathName;
 	cout << "Enter the filename with extension (without spaces) and press ENTER" << endl;
 	cin >> fileName;
+	
 	pathNFileName = pathName + fileName;
 
 	//declaring input file streams
@@ -41,23 +43,11 @@ int main()
 	int rowCount, colCountNew;
 	int** inArray = fileToArray(pathNFileName, &rowCount, &colCountNew);
 
-	//   To displaying the array we just imported
-	for (int i = 0; i < rowCount; i++)
-	{
-		for (int k = 0; k < colCountNew; k++)
-		{
-			cout << inArray[i][k] << " ";
-		}
-		cout << endl;
-	} //*****/
-	cout << endl;
 	peakFinder(inArray, pathName, rowCount, colCountNew);
-
     return 0;
 }
 
 
-//int** fileToArray(string inFileName)
 int** fileToArray(string inFileName, int* rowCount, int* colCountNew)
 {
 	ifstream inFile;
@@ -74,7 +64,6 @@ int** fileToArray(string inFileName, int* rowCount, int* colCountNew)
 		string tempString, restLine, eachRow;
 		*rowCount = 0;
 		int colCount = 0;
-		//int temp;
 		size_t pos1, pos2, pos3, pos4;
 
 		while (inFile.good())
@@ -82,13 +71,9 @@ int** fileToArray(string inFileName, int* rowCount, int* colCountNew)
 			// getting rid of unwanted text in file 
 			getline(inFile, tempString);
 			pos1 = tempString.find("[[");
-			cout << pos1 << endl;
-			restLine = tempString.substr(pos1);
-			cout << "The input Matrix from file is:" << endl << endl;
-			cout << restLine << endl;						//restLine stores just the array part
-			cout << endl;
+			restLine = tempString.substr(pos1);					//restLine stores just the array part
 
-			//iterate till the end of restLine to find all rows and store inside the vector getElements.
+			//***iterate till the end of restLine to find all rows and store inside the vector getElements. Using VECTORS to simplify storage and better manage memory.
 			while (restLine.find("[[[") != 0)				
 			{
 				//extracting each row
@@ -97,17 +82,15 @@ int** fileToArray(string inFileName, int* rowCount, int* colCountNew)
 				pos4 = restLine.find("]") - 2;
 				
 				eachRow = restLine.substr(pos3, pos4);
-				cout << "Fetching next row of the input Array: " << eachRow << endl;
 
 				// extracting each element of the row
 				stringstream lineStream(eachRow);
 				string value;
-				cout << "storing each value: " << endl;
+				
 				while (getline(lineStream, value, ','))
 				{
 					getElements.push_back(stoi(value));
-					cout << stoi(value) << endl;
-					++colCount;								//increment column count for the array
+					++colCount;									//increment column count for the array
 				}
 				++(*rowCount);									//increment row count for the array
 
@@ -115,15 +98,15 @@ int** fileToArray(string inFileName, int* rowCount, int* colCountNew)
 					restLine = restLine.substr(pos4 + 5);	// shortening the original data extraction
 					restLine.insert(0, "[");
 
-				if (restLine.find("[[[") != 0)
-					cout << restLine << endl << endl;
-				
+				//if (restLine.find("[[[") != 0)
+				//{
+				//	//cout << "Remaining rows in FILE: " << endl;
+				//	//cout << restLine << endl << endl;
+				//}
 			}
 		}
-		cout << endl;
-		cout << "Row count: " << *rowCount << endl;
+
 		*colCountNew = colCount / *rowCount;
-		cout << "Column count: " << *colCountNew << endl;
 		inFile.close();
 
 		
@@ -158,19 +141,15 @@ int** fileToArray(string inFileName, int* rowCount, int* colCountNew)
 int peakFinder(int** inPeakArray, string pathName, int rows, int columns)
 {
 	ofstream outFile;
-	string outputFile = pathName + "output.txt";
-	outFile.open(outputFile, ios_base::out);
+	outFile.open("localPeaks_Output.txt", ios_base::out);
 
 	if (outFile.is_open())
 	{
-		int halfRows = rows / 2;		// to divide array into 4 quadrants 
-		int halfCols = columns / 2;		// to divide array into 4 quadrants
-		int temp1;
 		int N, S, W, E; // to store north, south, west and east neighbors of an element
 
-		for (int i = 1; i < columns-1; i++)
+		for (int i = 1; i < rows-1; i++)
 		{
-			for (int j = 1; j < rows-1; j++)
+			for (int j = 1; j < columns-1; j++)
 			{
 				N = inPeakArray[i - 1][j];
 				S = inPeakArray[i + 1][j];
@@ -182,13 +161,11 @@ int peakFinder(int** inPeakArray, string pathName, int rows, int columns)
 				}
 				else
 				{
-					//outFile << "No peaks found. \n";
 					continue;
 				}			
 			}
 		}
-
-
+		cout << "Output stored in localPeaks_Output.txt" << endl;
 		outFile.close();
 		return 0;
 	}
